@@ -15,7 +15,7 @@ Environment: Big Sur, MacBook Pro 2019  <br />
 Processor: 1.4 GHz Quad-Core Intel i5  <br />
 Memory: 8 GB 2133 MHz LPDDR3 <br />
 <br />
-Parallel overhead is compensated when input size is nearly a million. <br />
+Parallel overhead is compensated when input size is nearly a million Cores:4, Speedup: 4. <br />
 
 Compilation: <br />
 g++ -g -std=c++17 eratosthenes_tbb.cpp -pthread -ltbb <br />
