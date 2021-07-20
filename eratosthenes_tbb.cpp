@@ -93,10 +93,9 @@ int main(int argc, char** argv){
     primes[2] = 1;
 
     // print prime results
-    /*for(int i=0; i<size; i++){
+    for(int i=0; i<size; i++){
         cout << "prime bool value of " << i << ": " << primes[i] << endl;
-    }*/
-    //cout << "Overall parallel time: " << overall_ms.count() << endl;
+    }
     delete [] data;
     delete [] primes;
     primes = nullptr;
