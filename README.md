@@ -6,9 +6,9 @@ Implementation is designed to observe speedup using parallel_for and a body obje
 Therefore hops performed in Sieve of Eratosthenes is not performed in this Prime Finder being different from the Sieve of Eratosthenes, instead a sequential pass is employed for each k value.  <br />
 
 The implementation is open to contribution as there are still a few optimizations left. <br />
-Prime array may not be necessarily used so that the storage complexity may also be reduced by using a vector containing only the primes. This vector may be accumulated to the result using split/join functionality of parallel_reduce.  <br />
+Prime array may not be necessarily used so that the storage complexity may also be reduced by using a vector containing only the primes. This vector may be accumulated to the result using split/join functionality of parallel_reduce. However that also has a drawback which is the obligation of search of a certain prime, whereas this is a constant time operation using arrays.  <br />
 
-Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values.  <br />
+Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. 250000 has given the best when size=10^6 within simple partitioner. <br />
 
 Hardware Details: <br />
 Environment: Big Sur, MacBook Pro 2019  <br />
