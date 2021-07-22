@@ -6,7 +6,7 @@ Implementation is designed to observe speedup using parallel_for&parallel_reduce
 - eratosthenes_tbb_reduce.cpp contains the implementation with parallel_reduce and it determines the chunking manually, operating on a quad-core processor.
 Speedup for n=10^6 and threads=16 : 150  <br />
 
-- eratosthenes_tbb.cpp contains the implementation with parallel_for and it determines the chunking automatically, having a poor speedup. Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. G=250000 has given the best when size=10^6 within simple partitioner. <br />
+- eratosthenes_tbb.cpp contains the implementation with parallel_for and it determines the chunking automatically. Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. G=250000 has given the best when size=10^6 within simple partitioner. Both versions may have a poor speedup due to not employing stride concept of the Eratosthenes algorithm and performing extra if checks in each iteration. <br />
 
 <br />
 Parallel overhead is compensated when input size is nearly a million. <br />
