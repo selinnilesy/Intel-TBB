@@ -11,7 +11,7 @@ Speedup: nearly 2. <br />
 Grainsize also can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. G=250000 has given the best when using simple partitioner for the input size of million. <br />
 Speedup: 4 (Ideal Speedup) <br />
 
-Parallel overhead is mostly compensated after input size 10 million.  <br />
+Parallel overhead is mostly compansated after input size 10 million.  <br />
 
 Compilation: <br />
 g++ -g -std=c++17 eratosthenes_tbb.cpp -pthread -ltbb <br />
