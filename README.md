@@ -3,7 +3,7 @@ Parallelization using Intel TBB  <br />
 
 Parallel prime finder inspired by Sieve of Eratosthenes algorithm.  <br />
 Implementation is designed to observe speedup using parallel_for&parallel_reduce within a body object, one of the basic concepts in Intel TBB library.  <br />
-- eratosthenes_tbb_reduce.cpp contains the implementation with parallel_reduce and it describes a user-defined iteration space called SieveRange for chunking, operating on a quad-core processor. This implementation has to use a user-defined space since there is a stride employed instead of computing mod values one by one on the numbers.  <br />
+- eratosthenes_tbb_reduce.cpp contains the implementation with parallel_reduce and it describes a user-defined iteration space called SieveRange for chunking, operating on a quad-core processor. This implementation has to use a user-defined space since there is a stride employed instead of computing modulo results one by one on the numbers.  <br />
 For loop needed for finding the next stride (k) is inherently sequential, however, another parallel_reduce class called FindNextK was also implemented to compare results. <br />
 Parallel overhead is compensated after input size 10 million. Speedup: nearly 2. <br />
 
