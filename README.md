@@ -7,7 +7,7 @@ Implementation is designed to observe speedup using parallel_for&parallel_reduce
 For loop needed for finding the next stride (k) is inherently sequential, however, another parallel_reduce class called FindNextK was also implemented to compare results. <br />
 Parallel overhead is compensated after input size 10 million. Speedup: nearly 2. <br />
 
-- eratosthenes_tbb.cpp contains the implementation with parallel_for and it determines the chunking automatically. Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. G=250000 has given the best when size=10^6 within simple partitioner. <br />
+- eratosthenes_tbb.cpp contains the implementation with parallel_for and it determines the chunking automatically. Alternatively, instead of automatic chunk splitting, grainsize can be adjusted manually conforming to the reasonable limits or affinity partitioners can be used so the speedup may be further investigated to the best values. G=250000 has given the best when using simple partitioner. <br />
 Speedup: 4 (Ideal Speedup) starting from an input size of million. <br />
 
 
