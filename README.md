@@ -1,4 +1,4 @@
-# Intel-TBB
+## Intel-TBB
 Parallelization using Intel TBB  <br />
 
 Parallel prime finder inspired by Sieve of Eratosthenes algorithm.  <br />
