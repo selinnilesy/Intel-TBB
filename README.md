@@ -13,6 +13,14 @@ Speedup: 4 (Ideal Speedup) <br />
 
 Parallel overhead is mostly compansated after input size 10 million.  <br />
 
+# SuperComputer: Hawk <br />
+Nodes: PBS <br />
+Node Type: rome <br />
+CPU: AMD7742 <br />
+\# of Cores: User defined in provided script <br />
+
+
+# MacOS
 Compilation: <br />
 g++ -g -std=c++17 eratosthenes_tbb.cpp -pthread -ltbb <br />
 
