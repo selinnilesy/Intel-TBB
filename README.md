@@ -18,6 +18,7 @@ Nodes: PBS <br />
 Node Type: rome <br />
 CPU: AMD7742 <br />
 \# of Cores: User defined in provided script <br />
+Compilation: Please use the provided Makefile and submit jobs with given scripts.
 
 
 # MacOS
