@@ -8,6 +8,7 @@
 #include <numeric>
 #include <chrono>
 #include <ctime>
+#include <cmath>
 
 using namespace tbb;
 using namespace std;
@@ -98,7 +99,7 @@ int main(int argc, char** argv){
 
     cout << "Overall parallel time: " << parallelTime.count() << "secs" << endl;
     cout << "Sequential time: " << SerialApplySieve( data, size , 2).count() << endl;
-    
+
     if(!silent){
         for(i=0; i<size; i++) cout <<"Prime bool value of " << i << " is: " << primes[i] << endl;
     }

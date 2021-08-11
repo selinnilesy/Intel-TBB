@@ -8,6 +8,7 @@
 #include <numeric>
 #include <chrono>
 #include <cmath>
+#include <cassert>
 
 using namespace tbb;
 using namespace std;
@@ -27,7 +28,7 @@ class SieveRange {
 public:
     bool is_divisible() const { return my_end - my_begin > my_grainsize; }
     bool empty() const { return my_end <= my_begin
-    ; }
+                ; }
     // Split r into subranges r and *this
     SieveRange( SieveRange& r, split ): my_stride(r.my_stride),
                                         my_grainsize(r.my_grainsize),
@@ -109,14 +110,14 @@ public:
 };
 */
 
-inline void ParallelApplySieve( int* a, size_t n, bool* primes , int local_k) {
+inline void ParallelApplySieve( int* a, size_t n, bool* primes , int local_k, int threadCount) {
 
     ApplySieve obj(local_k, primes);
     // set the range to be sieved as k^2 to n as the algorithm suggests.
     // there are 4 local cores, so the grainsize is handled in hardcoded way.
-    parallel_reduce(SieveRange(local_k*local_k, n, local_k, n/4), // begin end stride grain size
-                                 obj,
-                                 oneapi::tbb::simple_partitioner());
+    parallel_reduce(SieveRange(local_k*local_k, n, local_k, n/threadCount), // begin end stride grain size
+                    obj,
+                    simple_partitioner());
 }
 std::chrono::duration<double> SerialSieve( size_t n, bool silent) {
     const auto t1 = std::chrono::high_resolution_clock::now();
@@ -175,7 +176,7 @@ int main(int argc, char** argv){ // ./a.out 1000 4 silent
     int limit = sqrt(size);
 
     while(1){
-        ParallelApplySieve( data, size, primes , local_k);
+        ParallelApplySieve( data, size, primes , local_k, threadCount);
         primes[local_k] = 1;
         /*  Here FindNextK parallelization was observed. Instead, sequential search will be employed below.
          *
@@ -201,7 +202,7 @@ int main(int argc, char** argv){ // ./a.out 1000 4 silent
     cout << "Parallel time: " << parallelTime.count() << "secs" << endl;
 
     if(!silent){
-       for(i=0; i<size; i++) cout <<"Prime bool value of " << i << " is: " << primes[i] << endl;
+        for(i=0; i<size; i++) cout <<"Prime bool value of " << i << " is: " << primes[i] << endl;
     }
 
     // purely sequential run
