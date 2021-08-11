@@ -1,0 +1,2 @@
+Overall parallel time: 3.83342secs
+Sequential time: 12.6077

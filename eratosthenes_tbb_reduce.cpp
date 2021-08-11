@@ -1,14 +1,15 @@
 //
 // Created by Selin Yıldırım on 20.07.2021.
 //
-#include "oneapi/tbb.h"
+#include "tbb/tbb.h"
 #include <iostream>
 #include <stdlib.h>     /* atoi */
 #include <cstring>
 #include <numeric>
 #include <chrono>
+#include <cmath>
 
-using namespace oneapi::tbb;
+using namespace tbb;
 using namespace std;
 
 /* This class splits the iteration space according to the current stride and grainsize.
