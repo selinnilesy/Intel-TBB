@@ -19,6 +19,7 @@ using namespace std;
 class SieveRange {
     int my_stride, my_grainsize;
     int my_begin,my_end;
+
     bool assert_okay() const {
         assert(my_begin % my_stride == 0);
         assert(my_begin <= my_end);
@@ -56,27 +57,36 @@ public:
         assert(assert_okay());
     }
 };
+
 /* This is the actual class containing the functor of Sieve of Eratosthenes.
  * Stride k is used to strike the composite numbers of each range.
  * */
+
 class ApplySieve {
+
     bool* isPrime;
     const int k;
+
 public:
     void operator()( const SieveRange& range ) const {
         bool *copyPrime = isPrime;
         int local_k = k;
+
         size_t i = range.begin();
         size_t end = range.end();
+
         for( ; i<end;  i+=local_k ){
             copyPrime[i] = 0;
         }
     }
+
     ApplySieve(int k_init, bool* isPrimeInit) :  k(k_init), isPrime(isPrimeInit) {}
 
     ApplySieve( ApplySieve& x, split ) :  k(x.k), isPrime(x.isPrime) {}
+
     void join( const ApplySieve& y ) {}
 };
+
 /* This class is written for comparison purposes.
  * The for loop used to select the next stride (k) is tried to be parallelized here.
  * Since the first unmarked no. with the min index needs to be selected,
@@ -99,34 +109,36 @@ public:
         }
     }
     FindNextK(int k_init, bool* isPrimeInit, size_t size_init) :  k(k_init), primes(isPrimeInit), n(size_init) {}
-
     FindNextK( FindNextK& x, split ) : k(INT_MAX), primes(x.primes), n(x.n) {}
     void join( const FindNextK& y ) {
         if(y.k < this->k) {
             k=y.k;
         }
     }
-
 };
 */
 
-inline void ParallelApplySieve( int* a, size_t n, bool* primes , int local_k, int threadCount) {
-
+inline void ParallelApplySieve( int* a, size_t n, bool* primes , int local_k, int cores) {
     ApplySieve obj(local_k, primes);
     // set the range to be sieved as k^2 to n as the algorithm suggests.
-    // there are 4 local cores, so the grainsize is handled in hardcoded way.
-    parallel_reduce(SieveRange(local_k*local_k, n, local_k, n/threadCount), // begin end stride grain size
+    // the grainsize is computed from beginning to end equally acc. to core counts
+    int begin = local_k*local_k;
+    int grainSize = (n-begin)/cores;
+    parallel_reduce(SieveRange(begin, n, local_k, grainSize), // begin end stride grain size
                     obj,
                     simple_partitioner());
 }
+
 std::chrono::duration<double> SerialSieve( size_t n, bool silent) {
     const auto t1 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> seqTime;
     int i, j, local_k = 2;
     bool *primes = new bool[n];
     memset(primes, 1, n);
+    int limit = sqrt(n);
 
     primes[0] = primes[1] = 0;
+
     while(1) {
         // mark composites in the algorithm's range, k^2 to n.
         for (j=local_k*local_k; j <= n; j+=local_k){
@@ -140,7 +152,7 @@ std::chrono::duration<double> SerialSieve( size_t n, bool silent) {
             }
         }
         // end of the algorithm.
-        if (local_k > sqrt(n)) break;
+        if (local_k > limit) break;
     }
     const auto t2 = std::chrono::high_resolution_clock::now();
     seqTime = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);

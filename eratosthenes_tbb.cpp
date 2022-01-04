@@ -23,15 +23,18 @@ public:
         bool *copyPrime = isPrime;
         int local_k = k;
         size_t end = range.end();
+
         for( size_t i=range.begin(); i<end; i++ ){
-            if(copyArr[i]!=local_k && copyArr[i]%local_k==0) copyPrime[i]=0;
+            if(copyArr[i]!=local_k && copyArr[i]%local_k==0)
+                copyPrime[i]=0;
         }
     }
     ApplySieve(int *data, int k_init, bool* isPrimeInit) : arr(data), k(k_init), isPrime(isPrimeInit) {}
 
     /*
      * parallel_reduce together with a split+join might be used to accumulate a prime vector returned froom each split.
-    ApplySieve( ApplySieve& x, split ) : arr(x.arr), k(x.k), isPrime(x.isPrime) {}
+
+     ApplySieve( ApplySieve& x, split ) : arr(x.arr), k(x.k), isPrime(x.isPrime) {}
 
     void join( const ApplySieve& y ) {
        this->isPrime = y.isPrime;
@@ -44,26 +47,39 @@ void ParallelApplySieve( int* a, size_t n, bool* primes , int local_k) {
     //parallel_for(blocked_range<size_t>(0, n, 25000), obj, simple_partitioner()); // grain size
     parallel_for(blocked_range<size_t>(0, n), obj);   // automatic chunking
 }
+
 std::chrono::duration<double> SerialApplySieve( int* a, size_t n , int k) {
     const auto t1 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> seqTime;
-    int i;
-    int local_k = k;
-    bool *primes = new bool[n];
-    for( i=0; i<n; i++) primes[i]=1;
 
+    int i, local_k = k;
     int *data = a;
+
+    bool *primes = new bool[n];
+    memset(primes, 1, n);
+
     while(1) {
+        // mark composite as not-prime
         for (i = 0; i < n; i++) {
-            if (data[i] != local_k && data[i] % local_k == 0) primes[i] = 0;
+            if (data[i] != local_k && data[i] % local_k == 0)
+                primes[i] = 0;
         }
-        for (i = local_k + 1; i < n; i++) { if (primes[i]) { local_k = i; break; } }    // update k to next prime number
+
+        for (i = local_k + 1; i < n; i++) {
+            if (primes[i]) {
+                local_k = i; break;
+            }
+        }    // update k to next prime number
+
         if (local_k > sqrt(n)) { break; }  // no more primes can be found after this k
     }
+
     const auto t2 = std::chrono::high_resolution_clock::now();
     seqTime = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
     primes[0] = primes[1] = 0;
     primes[2] = 1;
+
     delete [] primes;
     return seqTime;
 }
@@ -98,7 +114,7 @@ int main(int argc, char** argv){
     primes[2] = 1;
 
     cout << "Overall parallel time: " << parallelTime.count() << "secs" << endl;
-    cout << "Sequential time: " << SerialApplySieve( data, size , 2).count() << endl;
+    //cout << "Sequential time: " << SerialApplySieve( data, size , 2).count() << endl;
 
     if(!silent){
         for(i=0; i<size; i++) cout <<"Prime bool value of " << i << " is: " << primes[i] << endl;
